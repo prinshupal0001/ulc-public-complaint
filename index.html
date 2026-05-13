@@ -15,15 +15,14 @@
 
 body{
 font-family:Arial;
-padding:15px;
 background:#f4f4f4;
+padding:15px;
 }
 
 .box{
 background:white;
 padding:15px;
 border-radius:10px;
-margin-bottom:15px;
 }
 
 input,textarea,button{
@@ -61,14 +60,6 @@ border:none;
 
 <textarea id="problem" placeholder="Problem"></textarea>
 
-<button onclick="getGPS()">
-
-Get GPS
-
-</button>
-
-<p id="gpsText"></p>
-
 <button onclick="saveComplaint()">
 
 Submit Complaint
@@ -86,7 +77,7 @@ apiKey: "AIzaSyBmz0XkBmGI4fp-bveq_F62Cdh6wkaeCmo",
 authDomain: "ulc-pro-max.firebaseapp.com",
 
 databaseURL: "https://ulc-pro-max-default-rtdb.firebaseio.com",
-  
+
 projectId: "ulc-pro-max",
 
 storageBucket: "ulc-pro-max.firebasestorage.app",
@@ -101,63 +92,37 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.database();
 
-let lat='';
-let lng='';
-
-function getGPS(){
-
-navigator.geolocation.getCurrentPosition(function(pos){
-
-lat=pos.coords.latitude;
-
-lng=pos.coords.longitude;
-
-gpsText.innerHTML='GPS Captured';
-
-});
-
-}
-
 function saveComplaint(){
 
-if(mobile.value==''){
-alert('Mobile Number Required');
-return;
-}
+let complaintData = {
 
-if(lat==''){
-alert('GPS Required');
-return;
-}
+name:document.getElementById('name').value,
 
-let obj={
+mobile:document.getElementById('mobile').value,
 
-name:name.value,
+site:document.getElementById('site').value,
 
-mobile:mobile.value,
-
-site:site.value,
-
-problem:problem.value,
-
-gps:lat+','+lng,
+problem:document.getElementById('problem').value,
 
 date:new Date().toLocaleString(),
 
-status:'Pending',
-
-type:'Public Complaint'
+status:'Pending'
 
 };
 
-db.ref('complaints').push(obj);
+db.ref('complaints').push(complaintData)
+
+.then(function(){
 
 alert('Complaint Submitted Successfully');
 
-name.value='';
-mobile.value='';
-site.value='';
-problem.value='';
+})
+
+.catch(function(error){
+
+alert(error);
+
+});
 
 }
 
